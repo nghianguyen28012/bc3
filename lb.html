@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Làm bài trắc nghiệm</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f9f9f9; }
+    .question { margin-bottom: 18px; padding: 12px; background: #fff; border-radius: 8px; border:1px solid #ddd; }
+    .opt { margin: 6px 0; display:block; }
+    .timer { color: red; margin-bottom: 12px; }
+    button { padding: 10px 16px; background:#007bff;color:#fff;border:none;border-radius:6px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <h2 id="deTitle">📝 Đề kiểm tra</h2>
+  <div class="timer">⏱️ Thời gian còn lại: <span id="time">20:00</span></div>
+  <form id="quizForm"></form>
+  <button id="submitBtn" type="button">Nộp bài</button>
+
+<script>
+const TOTAL_QUESTIONS = 20;
+const LETTERS = ["A","B","C","D"];
+const deThi = JSON.parse(localStorage.getItem('deThi'));
+const user = JSON.parse(localStorage.getItem('user'));
+
+if(!deThi || !deThi.cauhoi_json || deThi.cauhoi_json.length===0){
+  alert('Không có dữ liệu đề thi.');
+  location.href='index.html';
+}
+if(!user || !user.id){
+  alert('Vui lòng đăng nhập.');
+  location.href='index.html';
+}
+
+document.getElementById('deTitle').textContent = `📝 ${deThi.ten_de}`;
+const form = document.getElementById('quizForm');
+const questions = deThi.cauhoi_json.slice(0,TOTAL_QUESTIONS);
+
+function normalizeChoices(q){
+  const out=[];
+  if(Array.isArray(q.dapan)){
+    for(let i=0;i<Math.min(4,q.dapan.length);i++) out.push({label:LETTERS[i], text:q.dapan[i]});
+  } else if(q.dapan && typeof q.dapan==='object'){
+    for(const L of LETTERS) out.push({label:L, text:q.dapan[L]??q.dapan[L.toLowerCase()]??''});
+  } else {
+    for(const L of LETTERS) out.push({label:L,text:''});
+  }
+  return out;
+}
+
+questions.forEach((q,i)=>{
+  const div=document.createElement('div');
+  div.className='question';
+  const choices = normalizeChoices(q);
+  const inputName=`q_${q.id}_${i}`;
+  const optsHTML=choices.map(ch=>`
+    <label class="opt">
+      <input type="radio" name="${inputName}" value="${ch.label}" />
+      <strong>${ch.label}.</strong> ${ch.text}
+    </label>`).join('');
+  div.innerHTML=`<strong>Câu ${i+1}: ${q.noi_dung}</strong><br>`+optsHTML;
+  form.appendChild(div);
+});
+
+let timeLeft = 1200;
+const timerEl = document.getElementById('time');
+const countdown = setInterval(()=>{
+  const m=Math.floor(timeLeft/60), s=timeLeft%60;
+  timerEl.textContent=`${m}:${String(s).padStart(2,'0')}`;
+  timeLeft--;
+  if(timeLeft<0){ clearInterval(countdown); submitQuiz(); }
+},1000);
+
+function cleanLetter(x){
+  if(!x) return null;
+  const s=String(x).toUpperCase();
+  const m=s.match(/[ABCD]/);
+  return m?m[0]:null;
+}
+
+// ✅ Hàm chuẩn hóa đáp án đúng về A/B/C/D
+function getDeclaredLetter(q){
+  if(!q) return null;
+  const raw = q.dapan_dung;
+
+  // 1) Nếu đã là A/B/C/D
+  const l = cleanLetter(raw);
+  if(l) return l;
+
+  // 2) Nếu là số (0,1,2,3)
+  if(raw !== null && raw !== undefined && raw !== '' && !isNaN(raw)){
+    const idx = parseInt(raw);
+    if(idx >= 0 && idx < LETTERS.length) return LETTERS[idx];
+  }
+
+  // 3) Nếu raw khớp text của đáp án
+  const choices = normalizeChoices(q);
+  for(let i=0;i<choices.length;i++){
+    if(String(choices[i].text).trim() === String(raw).trim()) return LETTERS[i];
+  }
+
+  // 4) Cuối cùng: bắt ký tự A-D từ chuỗi
+  const s = String(raw || '').toUpperCase().trim();
+  const m = s.match(/[ABCD]/);
+  if(m) return m[0];
+
+  return null;
+}
+
+function submitQuiz(){
+  clearInterval(countdown);
+  let correctCount=0;
+
+  const ketQuaChiTiet = questions.map((q,i)=>{
+    const sel = document.querySelector(`input[name="q_${q.id}_${i}"]:checked`);
+    const da_chon_letter = sel ? cleanLetter(sel.value) : null;
+
+    const declared = getDeclaredLetter(q);
+
+    if(da_chon_letter && declared && da_chon_letter === declared) correctCount++;
+    return {
+      id: q.id,
+      noi_dung: q.noi_dung,
+      choices: normalizeChoices(q),
+      da_chon_letter,
+      dapan_dung_letter: declared
+    };
+  });
+
+  const diem = ((correctCount / questions.length) * 10).toFixed(1);
+
+  const ketQua = {
+    nguoi_lam_id: user.id,
+    de_id: deThi.id,
+    diem: diem,
+    cauhoi: ketQuaChiTiet
+  };
+
+  localStorage.setItem('ketQua', JSON.stringify(ketQua));
+  window.location.href = "ketqua.html";
+}
+
+document.getElementById('submitBtn').addEventListener('click', submitQuiz);
+</script>
+</body>
+</html>

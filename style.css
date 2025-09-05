@@ -1,0 +1,219 @@
+:root{
+  --bg:#0b1024;
+  --primary:#1f4cff;
+  --accent:#ffc400;
+  --text:#0f172a;
+  --muted:#6b7280;
+  --card:#ffffff;
+  --line:#e5e7eb;
+}
+
+*{ box-sizing:border-box }
+html,body{ height:100% }
+body{
+  margin:0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color:var(--text);
+  background:#f6f8fb;
+}
+
+/* ======= Landing (auth) ======= */
+.hero-header{
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 20px 0 16px;
+  background:linear-gradient(90deg,#07102b, #0f1c44 55%, #0f1c44);
+  color:#fff;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;
+}
+.brand img{ width:28px;height:28px }
+.auth-nav button{ margin-left:10px }
+
+.hero{
+  min-height:calc(100vh - 64px);
+  display:grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap:40px;
+  padding:56px 5vw;
+  background:
+    radial-gradient(1200px 600px at -10% -10%, rgba(31,76,255,.15), transparent 60%),
+    radial-gradient(900px 500px at 110% 10%, rgba(255,196,0,.12), transparent 50%),
+    linear-gradient(180deg, #0f1c44 0%, #0b1024 55%, #0b1024 100%);
+  color:#eaf0ff;
+}
+.hero h1{ font-size:48px; line-height:1.15; margin:0 0 12px }
+.hero .accent{ color:var(--accent) }
+.hero p{ color:#c9d2ff }
+.hero-cta{ display:flex; gap:12px; margin-top:18px }
+
+.hero-right{ display:flex; align-items:center; justify-content:center }
+.mockup-card{
+  width:420px;background:#11193d;border:1px solid rgba(255,255,255,.1);
+  border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.45); overflow:hidden
+}
+.mockup-top{ display:flex; gap:6px; padding:10px 12px; background:#0b1330 }
+.mockup-top span{ width:10px;height:10px; border-radius:50%; background:#2b3570 }
+.mockup-body{ padding:16px 18px }
+.mockup-body .stat p{ font-size:40px; margin:0; color:#fff }
+.mockup-body .stat small{ color:#a7b1ff }
+.tiles{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:16px }
+.tiles div{ padding-top:60%; border-radius:10px; background:linear-gradient(135deg,#8c94c8,#dbdce4) }
+
+.auth-area{
+  display:grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+  gap:24px; padding:28px 5vw 60px; margin-top:-40px;
+}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  padding:20px 18px; box-shadow:0 8px 30px rgba(2,7,28,.06);
+}
+.card h2{ margin-top:6px }
+.card label{ display:block; font-size:14px; color:var(--muted); margin:10px 0 6px }
+.card input, .card select{
+  width:100%; padding:12px 12px; border-radius:10px; border:1px solid var(--line);
+  outline:none; background:#fff;
+}
+.card input:focus, .card select:focus{ border-color:var(--primary); box-shadow:0 0 0 4px rgba(31,76,255,.12) }
+.card .w-100{ width:100% }
+.muted{ color:var(--muted); font-size:14px }
+.hidden{ display:none !important }
+
+button{
+  border:0; padding:10px 16px; border-radius:999px; cursor:pointer; font-weight:600;
+}
+.solid{ background:var(--primary); color:#fff }
+.solid:hover{ filter:brightness(.95) }
+.ghost{ background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.2) }
+.auth-area .ghost{ color:var(--text); background:#eef2ff; border:1px solid #c7d2fe }
+.auth-area .ghost:hover{ background:#e0e7ff }
+
+/* ======= APP (after login) ======= */
+.app-header{
+  height:64px; background:#0f1c44; color:#fff;
+  display:flex; align-items:center; justify-content:space-between; padding:0 16px 0 12px;
+}
+.app-nav button{ margin-left:10px }
+.app{ display:grid; grid-template-columns:260px 1fr; min-height:calc(100vh - 64px) }
+
+.sidebar{
+  background:#ffffff; border-right:1px solid var(--line); padding:16px 14px;
+}
+.sidebar .group-title{ font-size:12px; color:#64748b; margin:14px 6px }
+.side-btn{
+  width:100%; text-align:left; border-radius:10px; padding:10px 12px; color:#0f172a; background:#f1f5ff;
+  border:1px solid #dbe4ff; margin-bottom:8px;
+}
+.side-btn:hover{ background:#e4ecff }
+.subject-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px }
+.subject-pill{
+  background:#f8fafc; border:1px solid var(--line); padding:10px 12px; border-radius:12px;
+  display:flex; align-items:center; gap:10px; cursor:pointer;
+}
+.subject-pill i{ font-size:18px }
+.subject-pill:hover{ background:#eef2ff }
+
+.content{ padding:22px 24px }
+.panel{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px; box-shadow:0 10px 30px rgba(2,7,28,.06) }
+.panel + .panel{ margin-top:16px }
+.panel h2{ margin:4px 0 6px }
+.panel .muted{ margin-top:0 }
+
+#subjectGridMain{
+  margin-top:10px;
+  display:grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap:12px;
+}
+.subject-card{
+  background:#ffffff; border:1px solid var(--line); border-radius:14px; padding:16px;
+  display:flex; gap:12px; align-items:center; cursor:pointer;
+  transition:transform .08s ease, box-shadow .2s;
+}
+.subject-card i{ font-size:22px }
+.subject-card:hover{ transform: translateY(-2px); box-shadow:0 8px 26px rgba(16,24,40,.08) }
+
+.level-row{ display:flex; gap:10px; margin:14px 0; flex-wrap:wrap }
+.chip{
+  padding:8px 12px; border-radius:999px; border:1px solid var(--line); background:#f8fafc; cursor:pointer;
+}
+.chip:hover{ background:#eef2ff }
+.exam-list{ display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:12px }
+.exam-card{
+  border:1px solid var(--line); background:#fff; border-radius:12px; padding:14px;
+}
+.exam-card h4{ margin:6px 0 8px }
+.exam-meta{ color:var(--muted); font-size:13px; display:flex; gap:10px }
+.exam-card .solid{ margin-top:10px; padding:8px 12px; border-radius:10px }
+
+/* Create exam */
+.panel-head{ display:flex; align-items:center; justify-content:space-between; gap:12px }
+.form-row{ display:grid; grid-template-columns:1.2fr .8fr; gap:10px; margin-top:8px }
+#questionsContainer .qbox{
+  border:1px dashed #cbd5e1; border-radius:12px; padding:12px; margin-top:10px; background:#fbfdff;
+}
+.qbox .row{ display:grid; grid-template-columns:1fr 1fr; gap:8px }
+.qbox input{ width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px }
+.qbox select{ width:120px; padding:10px; border:1px solid var(--line); border-radius:10px }
+.actions{ display:flex; gap:10px; margin-top:12px }
+
+/* ====== Slider ảnh (trang login) ====== */
+.image-slider{
+  width:100%;
+  overflow:hidden;
+  background:#0b1024;
+  padding:20px 0;
+}
+.slider-track{
+  display:flex;
+  width:max-content;
+  animation: scroll 28s linear infinite;
+}
+.slider-track img{
+  width:180px;
+  height:110px;
+  object-fit:cover;
+  border-radius:10px;
+  margin:0 10px;
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+}
+@keyframes scroll{
+  from{ transform: translateX(0); }
+  to{ transform: translateX(-50%); }
+}
+
+/* ====== Thi trắc nghiệm & Kết quả ====== */
+#questionWrap .question{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:12px;
+  padding:14px;
+  margin-top:12px;
+}
+.question h4{ margin:0 0 8px }
+.options{ display:grid; gap:8px; margin-top:6px }
+.option{
+  border:1px solid var(--line);
+  background:#f8fafc;
+  border-radius:10px;
+  padding:10px 12px;
+  cursor:pointer;
+}
+.option:hover{ background:#eef2ff }
+.option input{ margin-right:8px }
+
+.results-table{
+  width:100%;
+  border-collapse: collapse;
+  margin-top:10px;
+}
+.results-table th, .results-table td{
+  border:1px solid var(--line);
+  padding:10px 12px;
+  text-align:left;
+}
+.results-table th{
+  background:#f1f5ff;
+  color:#0f172a;
+}

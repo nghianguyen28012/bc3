@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Luyện thi Trắc nghiệm - Đăng nhập</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="hero-header" id="authHeader">
+    <div class="brand">
+      <img src="https://cdn-icons-png.flaticon.com/512/2995/2995465.png" alt="logo">
+      <span>onLuyen</span>
+    </div>
+    <nav class="auth-nav">
+      <button class="ghost" id="btnShowLogin">Đăng nhập</button>
+      <button class="solid" id="btnShowRegister">Đăng ký</button>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="authHero">
+    <div class="hero-left">
+      <h1>Luyện thi <span class="accent">trắc nghiệm</span> theo <br/>môn & trình độ</h1>
+      <p>Luyện thi mọi lúc, phù hợp mọi người, sẵn sàng nâng cao trình độ của bản thân chưa nào!</p>
+      <div class="hero-cta">
+        <button class="solid" id="ctaStart"><i class="fa-solid fa-right-to-bracket"></i> Bắt đầu</button>
+        <button class="ghost" id="ctaRegister"><i class="fa-solid fa-user-plus"></i> Tạo tài khoản</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="mockup-card">
+        <div class="mockup-top"><span></span><span></span><span></span></div>
+        <div class="mockup-body">
+          <div class="stat">
+            <p>Trải nghiệm mượt mà</p>
+            <small>Nền tảng học & thi</small>
+          </div>
+          <div class="tiles">
+            <div>HỌC TỐT</div><div>TIỆN LỢI</div><div>HIỆU QUẢ</div><div>NHANH CHÓNG</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Auth Area -->
+  <section class="auth-area" id="authArea">
+    <!-- Đăng nhập -->
+    <div class="card" id="loginCard">
+      <h2>Đăng nhập</h2>
+      <form id="loginForm" method="POST">
+        <label>Tên đăng nhập</label>
+        <input name="username" type="text" placeholder="vd: nguoidung01" required />
+        <label>Mật khẩu</label>
+        <input name="password" type="password" placeholder="••••••••" required />
+        <label>Vai trò</label>
+        <select name="quyen_id" required>
+          <option value="1">Admin</option>
+          <option value="2">Giảng viên</option>
+          <option value="3">Học sinh</option>
+        </select>
+        <button class="solid w-100" type="submit">
+          <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
+        </button>
+      </form>
+      <p class="muted">Chưa có tài khoản? <a href="#" id="linkToRegister">Đăng ký</a></p>
+    </div>
+    <!-- Đăng ký -->
+    <div class="card hidden" id="registerCard">
+      <h2>Đăng ký</h2>
+      <form id="registerForm" method="POST" action="dangki.php">
+        <label>Họ tên</label>
+        <input name="ho_ten" type="text" placeholder="vd: Nguyễn Văn A" required />
+        <label>Email</label>
+        <input name="email" type="email" placeholder="vd: nguyenvana@gmail.com" required />
+        <label>Tên đăng nhập</label>
+        <input name="username" type="text" placeholder="vd: giaovientoan" required />
+        <label>Mật khẩu</label>
+        <input name="password" type="password" placeholder="••••••••" required />
+        <label>Vai trò</label>
+        <select name="quyen_id" required>
+          
+          <option value="2">Giảng viên</option>
+          <option value="3">Học sinh</option>
+        </select>
+        <button class="solid w-100" type="submit">
+          <i class="fa-solid fa-user-plus"></i> Tạo tài khoản
+        </button>
+      </form>
+      <p class="muted">Đã có tài khoản? <a href="#" id="linkToLogin">Đăng nhập</a></p>
+    </div>
+  </section>
+
+  <!-- Slider ảnh -->
+  <div class="image-slider">
+    <div class="slider-track">
+      <img src="images/Screenshot 2025-08-20 081750.png" alt="">
+      <img src="images/images (1).jpg" alt="">
+      <img src="images/Screenshot 2025-08-20 081757.png" alt="">
+      <img src="images/Screenshot 2025-08-20 081804.png" alt="">
+      <img src="images/Screenshot 2025-08-20 081811.png" alt="">
+      <img src="images/Screenshot 2025-08-20 081829.png" alt="">
+      <img src="images/Screenshot 2025-08-20 081835.png" alt="">
+      <img src="images/tải xuống (1).jpg" alt="">
+      <img src="images/tải xuống (2).jpg" alt="">
+      <img src="images/images.jpg" alt="">
+    </div>
+  </div>
+
+  <!-- JavaScript xử lý đăng nhập -->
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch("dangnhap.php", {
+        method: "POST",
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") {
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            switch (data.user.quyen_id) {
+              case 1:
+                window.location.href = "admin.html";
+                break;
+              case 2:
+                window.location.href = "gv.html";
+                break;
+              case 3:
+                window.location.href = "hs.html";
+                break;
+              default:
+                alert("Vai trò không hợp lệ!");
+            }
+          } else {
+            alert(data.message || "Đăng nhập thất bại!");
+          }
+        })
+        .catch(error => {
+          console.error("Lỗi đăng nhập:", error);
+          alert("Đã xảy ra lỗi khi đăng nhập.");
+        });
+    });
+  </script>
+  <script>
+  // Hiển thị form đăng nhập
+  document.getElementById("btnShowLogin").addEventListener("click", function () {
+    document.getElementById("loginCard").classList.remove("hidden");
+    document.getElementById("registerCard").classList.add("hidden");
+  });
+
+  // Hiển thị form đăng ký
+  document.getElementById("btnShowRegister").addEventListener("click", function () {
+    document.getElementById("registerCard").classList.remove("hidden");
+    document.getElementById("loginCard").classList.add("hidden");
+  });
+
+  // Link chuyển từ đăng nhập sang đăng ký
+  document.getElementById("linkToRegister").addEventListener("click", function (e) {
+    e.preventDefault();
+    document.getElementById("registerCard").classList.remove("hidden");
+    document.getElementById("loginCard").classList.add("hidden");
+  });
+
+  // Link chuyển từ đăng ký sang đăng nhập
+  document.getElementById("linkToLogin").addEventListener("click", function (e) {
+    e.preventDefault();
+    document.getElementById("loginCard").classList.remove("hidden");
+    document.getElementById("registerCard").classList.add("hidden");
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý đề thi - Giảng viên</title>
+<link rel="stylesheet" href="stylegv.css">
+</head>
+<body>
+<header>
+    <h1>Xin chào, <span id="teacherName">Thầy/Cô</span></h1>
+</header>
+
+<nav class="menu">
+    <button onclick="showCreateOptions()">📝 Tạo đề mới</button>
+    <button onclick="showSubjects()">📚 Làm bài</button>
+    <button onclick="viewResults()">📊 Xem kết quả</button>
+</nav>
+
+<section id="createOptions" class="hidden">
+    <h2>Tạo đề</h2>
+    <button onclick="showRandomForm()">🔀 Tạo đề ngẫu nhiên</button>
+    <button onclick="showCustomForm()">✏️ Tạo đề thủ công</button>
+
+    <!-- Form tạo đề ngẫu nhiên -->
+    <div id="randomForm" class="hidden form-box">
+        <h3>Tạo đề ngẫu nhiên</h3>
+        <input type="text" id="randomExamName" placeholder="Tên đề">
+        <select id="randomSubject">
+            <option value="">Chọn môn</option>
+            <option value="1">Toán</option>
+            <option value="2">Ngữ văn</option>
+            <option value="3">Tiếng Anh</option>
+            <!-- Thêm môn khác -->
+        </select>
+        <select id="randomClass">
+            <option value="">Chọn lớp</option>
+            <option value="10">Lớp 10</option>
+            <option value="11">Lớp 11</option>
+            <option value="12">Lớp 12</option>
+        </select>
+        <input type="number" id="randomCount" placeholder="Số câu (VD: 20)">
+        <button onclick="createRandomExam()">Tạo ngay</button>
+    </div>
+
+    <!-- Form tạo đề thủ công -->
+    <div id="customForm" class="hidden form-box">
+        <h3>Tạo đề thủ công</h3>
+        <input type="text" id="customExamName" placeholder="Tên đề">
+        <select id="filterSubject">
+            <option value="">Chọn môn</option>
+            <option value="1">Toán</option>
+            <option value="2">Ngữ văn</option>
+            <option value="3">Tiếng Anh</option>
+        </select>
+        <select id="filterClass">
+            <option value="">Chọn lớp</option>
+            <option value="10">Lớp 10</option>
+            <option value="11">Lớp 11</option>
+            <option value="12">Lớp 12</option>
+        </select>
+        <input type="text" id="searchKeyword" placeholder="Tìm câu hỏi">
+        <button onclick="loadQuestions(1)">Tìm kiếm</button>
+        <p>Đã chọn: <span id="selectedCount">0</span> câu</p>
+        <div id="questionList"></div>
+        <div id="pagination"></div>
+        <button onclick="saveCustomExam()">Lưu đề</button>
+    </div>
+</section>
+
+<section id="subjectList" class="hidden">
+    <h2>Chọn môn để làm bài</h2>
+    <div id="subjects"></div>
+</section>
+
+<section id="classList" class="hidden">
+    <h2>Chọn lớp</h2>
+    <div id="classes"></div>
+</section>
+
+<section id="examList" class="hidden">
+    <h2>Chọn đề</h2>
+    <div id="exams"></div>
+</section>
+
+<script src="scriptgv.js"></script>
+</body>
+</html>

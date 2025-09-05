@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Trang Học Sinh</title>
+  <link rel="stylesheet" href="stylehs.css">
+  <style>
+    .hidden { display: none; }
+    .card-btn {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .card-btn:hover { background: #0056b3; }
+    .card-section { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Onluyen Logo" class="logo">
+    <nav>
+      <a href="#">Tin tức</a>
+      <a href="#">Kỳ thi</a>
+      <a href="#">Học phí</a>
+      <a href="#">Flashcard</a>
+      <a href="#">Tuyển dụng</a>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <section class="welcome">
+      <h1>Chào mừng, <span id="studentName">Học sinh</span> 👋</h1>
+      <p>Hãy chọn một hành động bên dưới để bắt đầu học tập.</p>
+    </section>
+
+    <section class="actions">
+      <button class="action-btn" onclick="showSubjects()">📚 Làm bài trắc nghiệm</button>
+      <button class="action-btn" onclick="viewResults()">📊 Xem kết quả</button>
+    </section>
+
+    <section id="subjectList" class="card-section hidden">
+      <h2>🧠 Chọn môn học</h2>
+      <div class="card-container" id="subjects"></div>
+    </section>
+
+    <section id="classList" class="card-section hidden">
+      <h2>🏫 Chọn lớp học</h2>
+      <div class="card-container" id="classes"></div>
+    </section>
+
+    <section id="examList" class="card-section hidden">
+      <h2>📝 Chọn bài kiểm tra</h2>
+      <div class="card-container" id="exams"></div>
+    </section>
+  </main>
+
+  <script>
+    // Hiển thị tên học sinh
+    const user = JSON.parse(localStorage.getItem("user"));
+    document.getElementById("studentName").textContent = user?.ho_ten || "Học sinh";
+
+    // ✅ Thứ tự môn học theo yêu cầu
+    const subjects = [
+      "Toán", "Văn", "Anh", "Sử", "Địa", "Sinh", "Tin học", "Vật lý", "Hóa học"
+    ];
+
+    const classes = Array.from({ length: 12 }, (_, i) => `Lớp ${i + 1}`);
+
+    function showSubjects() {
+      document.getElementById("subjectList").classList.remove("hidden");
+      document.getElementById("classList").classList.add("hidden");
+      document.getElementById("examList").classList.add("hidden");
+
+      const container = document.getElementById("subjects");
+      container.innerHTML = "";
+      subjects.forEach(mon => {
+        const btn = document.createElement("button");
+        btn.textContent = mon;
+        btn.className = "card-btn";
+        btn.onclick = () => selectSubject(mon);
+        container.appendChild(btn);
+      });
+    }
+
+    function selectSubject(mon) {
+      localStorage.setItem("selectedMon", mon);
+      document.getElementById("classList").classList.remove("hidden");
+      document.getElementById("examList").classList.add("hidden");
+
+      const container = document.getElementById("classes");
+      container.innerHTML = "";
+
+      let filteredClasses = classes;
+      if (mon === "Vật lý" || mon === "Hóa học") {
+        // ✅ Chỉ hiển thị từ lớp 8 trở lên
+        filteredClasses = classes.slice(7); // Lớp 8 -> 12
+      }
+
+      filteredClasses.forEach(lop => {
+        const btn = document.createElement("button");
+        btn.textContent = lop;
+        btn.className = "card-btn";
+        btn.onclick = () => selectClass(lop.replace("Lớp ", ""));
+        container.appendChild(btn);
+      });
+    }
+
+    function selectClass(lop_id) {
+      localStorage.setItem("selectedLop", lop_id);
+      document.getElementById("examList").classList.remove("hidden");
+
+      const container = document.getElementById("exams");
+      container.innerHTML = "";
+      [1, 2, 3].forEach(soDe => {
+        const btn = document.createElement("button");
+        btn.textContent = `Đề số ${soDe}`;
+        btn.className = "card-btn";
+        btn.onclick = () => loadExam(soDe);
+        container.appendChild(btn);
+      });
+    }
+
+    function loadExam(soDe) {
+      const mon = localStorage.getItem("selectedMon");
+      const lop = localStorage.getItem("selectedLop");
+
+      // ✅ Map môn học sang ID chuẩn
+     const monhocMap = {
+  "Toán": 1,
+  "Văn": 2,
+  "Anh": 3,
+  "Sử": 4,
+  "Địa": 5,
+  "Sinh": 6,
+  "GDCD": 7,
+  "Tin học": 8,
+  "Vật lý": 9,
+  "Hóa học": 10
+};
+
+      const monhoc_id = monhocMap[mon];
+
+      fetch(`layde.php?monhoc_id=${monhoc_id}&lop_id=${lop}&sode=${soDe}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data || !data.cauHoi || data.cauHoi.length === 0) {
+            alert("Đề thi không khả dụng. Vui lòng chọn đề khác.");
+            return;
+          }
+
+          const cauhoi_json = data.cauHoi.map(q => ({
+            id: q.id,
+            noi_dung: q.noi_dung,
+            dapan: [q.dapan_a, q.dapan_b, q.dapan_c, q.dapan_d],
+            dapan_dung: parseInt(q.dapan_dung)
+          }));
+
+          const deThi = {
+            ten_de: data.ten_de,
+            cauhoi_json: cauhoi_json
+          };
+
+          localStorage.setItem("deThi", JSON.stringify(deThi));
+          window.location.href = "lb.html";
+        })
+        .catch(err => {
+          console.error("Lỗi tải đề:", err);
+          alert("Không thể tải đề thi. Vui lòng thử lại.");
+        });
+    }
+
+    function viewResults() {
+      window.location.href = "xemketqua.html";
+    }
+  </script>
+</body>
+</html>

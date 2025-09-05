@@ -1,0 +1,5 @@
+[21-Aug-2025 12:36:44 Europe/Berlin] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'nguoi_lam_id' in 'field list' in D:\xampp\htdocs\nghia\ketqua.php:34
+Stack trace:
+#0 D:\xampp\htdocs\nghia\ketqua.php(34): mysqli->prepare('INSERT INTO ket...')
+#1 {main}
+  thrown in D:\xampp\htdocs\nghia\ketqua.php on line 34
